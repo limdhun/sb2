@@ -11,8 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
+import org.zerock.sb2.todo.entities.QTodo;
 import org.zerock.sb2.todo.entities.Todo;
 import org.zerock.sb2.todo.repository.TodoRepository;
+
+import com.querydsl.jpa.JPQLQuery;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 
 
 import lombok.extern.log4j.Log4j2;
@@ -24,8 +28,18 @@ public class TodoRepoTests {
   
   @Autowired(required = false)
   private TodoRepository repository;
+  
+  @Autowired
+  private JPAQueryFactory queryFactory;
 
-
+  @Test
+  public void testQuery(){
+    log.info(queryFactory);
+    QTodo todo = QTodo.todo;
+    JPQLQuery<Todo> query = queryFactory.selectFrom(todo);
+    query.where(todo.tno.gt(0L));//0보다 큰 애들
+    log.info(query);
+  }
   //gradlew build -x test
   //@Disabled
   @Test
